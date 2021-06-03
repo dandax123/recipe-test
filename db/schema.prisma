@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -16,13 +16,15 @@ model User {
   id             Int      @id @default(autoincrement())
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  name           String?
+  name           String
   email          String   @unique
   hashedPassword String?
   role           String   @default("USER")
 
-  tokens   Token[]
-  sessions Session[]
+  tokens     Token[]
+  sessions   Session[]
+  meals      Meal[]    @relation("authorToMeal")
+  savedMeals Meal[]    @relation("favoriteToMeal")
 }
 
 model Session {
@@ -57,9 +59,49 @@ model Token {
   @@unique([hashedToken, type])
 }
 
+model Meal {
+  id          Int        @id @default(autoincrement())
+  author      User?      @relation(fields: [authorId], references: [id], name: "authorToMeal")
+  authorId    Int?
+  favorite    User?      @relation(fields: [favoriteId], references: [id], name: "favoriteToMeal")
+  favoriteId  Int?
+  title       String?
+  description String
+  cookTime    Int
+  image       String
+  Recipe      Recipe?    @relation(fields: [recipeId], references: [id])
+  recipeId    Int?       @unique
+  Category    Category[]
+}
+
+model Recipe {
+  id          Int          @id @default(autoincrement())
+  instruction String
+  ingredients Ingredient[]
+  meal        Meal?
+}
+
+model Ingredient {
+  id       Int     @id @default(autoincrement())
+  name     String
+  qty      Int
+  measure  String
+  Recipe   Recipe? @relation(fields: [recipeId], references: [id])
+  recipeId Int?
+
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  title String @unique
+  Meal  Meal[]
+}
+
 // NOTE: It's highly recommended to use an enum for the token type
 //       but enums only work in Postgres.
 //       See: https://blitzjs.com/docs/database-overview#switch-to-postgresql
 // enum TokenType {
 //   RESET_PASSWORD
 // }
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema

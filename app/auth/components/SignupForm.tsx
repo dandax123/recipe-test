@@ -1,8 +1,8 @@
 import { useMutation } from "blitz"
-import { LabeledTextField } from "app/core/components/LabeledTextField"
+import { LabeledTextField } from "app/core/components/Form/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import signup from "app/auth/mutations/signup"
-import { Signup } from "app/auth/validations"
+import { Signup } from "app/validation"
 
 type SignupFormProps = {
   onSuccess?: () => void
@@ -13,8 +13,6 @@ export const SignupForm = (props: SignupFormProps) => {
 
   return (
     <div>
-      <h1>Create an Account</h1>
-
       <Form
         submitText="Create Account"
         schema={Signup}
@@ -33,6 +31,7 @@ export const SignupForm = (props: SignupFormProps) => {
           }
         }}
       >
+        <LabeledTextField name="name" label="Full Name" placeholder="Full Name" type="text" />
         <LabeledTextField name="email" label="Email" placeholder="Email" />
         <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
       </Form>

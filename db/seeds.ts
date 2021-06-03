@@ -1,4 +1,4 @@
-// import db from "./index"
+import db from "./index"
 
 /*
  * This seed function is executed when you run `blitz db seed`.
@@ -8,9 +8,41 @@
  * realistic data.
  */
 const seed = async () => {
-  // for (let i = 0; i < 5; i++) {
-  //   await db.project.create({ data: { name: "Project " + i } })
-  // }
+  //create categories
+
+  for (let i = 0; i < 10; i++) {
+    try {
+      const testMeal = await db.user.update({
+        where: {
+          id: 1,
+        },
+        data: {
+          meals: {
+            create: {
+              title: `test meal ${i}`,
+              description: "nice meal foa fdasd fasdfasdf asdfasdf asdfasdf asd asdf asdf asdf ",
+              cookTime: 40,
+              image: "asdfasdf",
+              Recipe: {
+                create: {
+                  instruction: "boil for one minute",
+                  ingredients: {
+                    create: [
+                      { name: "maggie", qty: 3, measure: "cups" },
+                      { name: "salt", qty: 1, measure: "spoons" },
+                    ],
+                  },
+                },
+              },
+              Category: { create: [{ title: "test" }] },
+            },
+          },
+        },
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
 }
 
 export default seed

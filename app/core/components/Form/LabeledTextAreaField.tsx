@@ -1,17 +1,18 @@
 import { forwardRef, PropsWithoutRef } from "react"
 import { useField } from "react-final-form"
 
-export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElements["input"]> {
+export interface LabeledTextAreaFieldProps
+  extends PropsWithoutRef<JSX.IntrinsicElements["textarea"]> {
   /** Field name. */
   name: string
   /** Field label. */
   label: string
   /** Field type. Doesn't include radio buttons and checkboxes */
-  type?: "text" | "password" | "email" | "number"
+  type?: "text" | "password" | "email" | "number" | "search" | "text-area"
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
 }
 
-export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldProps>(
+export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, LabeledTextAreaFieldProps>(
   ({ name, label, outerProps, ...props }, ref) => {
     const {
       input,
@@ -26,7 +27,14 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
       <div {...outerProps}>
         <label>
           {label}
-          <input {...input} disabled={submitting} {...props} ref={ref} />
+          <textarea
+            {...input}
+            disabled={submitting}
+            {...props}
+            ref={ref}
+            rows={4}
+            className="w-full p-0.5 rounded-sm "
+          />
         </label>
 
         {touched && normalizedError && (
@@ -42,11 +50,11 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
             align-items: start;
             font-size: 1rem;
           }
-          input {
-            font-size: 1rem;
-            padding: 0.25rem 0.5rem;
+          textarea {
+            // font-size: 1rem;
+            // padding: 0.25rem 0.5rem;
             border-radius: 3px;
-            border: 1px solid purple;
+            border: 1px solid black;
             appearance: none;
             margin-top: 0.5rem;
           }
@@ -56,4 +64,4 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
   }
 )
 
-export default LabeledTextField
+export default LabeledTextAreaField

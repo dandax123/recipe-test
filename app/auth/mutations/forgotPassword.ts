@@ -1,7 +1,7 @@
 import { resolver, generateToken, hash256 } from "blitz"
 import db from "db"
 import { forgotPasswordMailer } from "mailers/forgotPasswordMailer"
-import { ForgotPassword } from "../validations"
+import { ForgotPassword } from "../../validation"
 
 const RESET_PASSWORD_TOKEN_EXPIRATION_IN_HOURS = 4
 

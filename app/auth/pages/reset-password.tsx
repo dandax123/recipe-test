@@ -1,8 +1,8 @@
 import { BlitzPage, useRouterQuery, Link, useMutation, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import { LabeledTextField } from "app/core/components/LabeledTextField"
+import { LabeledTextField } from "app/core/components/Form/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
-import { ResetPassword } from "app/auth/validations"
+import { ResetPassword } from "app/validation"
 import resetPassword from "app/auth/mutations/resetPassword"
 
 const ResetPasswordPage: BlitzPage = () => {

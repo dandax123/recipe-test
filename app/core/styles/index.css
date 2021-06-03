@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html,
+body,
+__#next {
+  /* position: fixed; */
+  padding: 0;
+  margin: 0;
+  min-width: 100%;
+  min-height: 100vh;
+  overflow: auto;
+}
