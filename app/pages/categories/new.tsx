@@ -1,6 +1,7 @@
 import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import createCategory from "app/categories/mutations/createCategory"
+import { createCategoryValidation } from "../../validation"
 import { CategoryForm, FORM_ERROR } from "app/categories/components/CategoryForm"
 
 const NewCategoryPage: BlitzPage = () => {
@@ -16,7 +17,7 @@ const NewCategoryPage: BlitzPage = () => {
         // TODO use a zod schema for form validation
         //  - Tip: extract mutation's schema into a shared `validations.ts` file and
         //         then import and use it here
-        // schema={CreateCategory}
+        schema={createCategoryValidation}
         // initialValues={{}}
         onSubmit={async (values) => {
           try {

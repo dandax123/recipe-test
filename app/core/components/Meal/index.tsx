@@ -37,14 +37,6 @@ const MealComponent: React.FC<MealComponentProps> = ({ meal }) => {
         <div className="p-2">
           <h3 className="font-medium text-gray-600 text-lg my-2 uppercase">{`${meal.title}`}</h3>
           <p className="text-justify">{`${meal.description}`}</p>
-          <div className="mt-5">
-            <a
-              href=""
-              className="hover:bg-gray-700 rounded-full py-2 px-3 font-semibold hover:text-white bg-gray-400 text-gray-100"
-            >
-              Read More
-            </a>
-          </div>
         </div>
       </div>
     </>

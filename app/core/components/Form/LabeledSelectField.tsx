@@ -1,7 +1,8 @@
-import { forwardRef, PropsWithoutRef } from "react"
+import { forwardRef, PropsWithoutRef, useState } from "react"
 import { useField } from "react-final-form"
-import Select from "react-select"
+import Select from "react-select/creatable"
 import makeAnimated from "react-select/animated"
+import { invalidateQuery, useQuery } from "blitz"
 const animatedComponents = makeAnimated()
 
 export interface OptionsForSelect {
@@ -13,19 +14,26 @@ export interface SelectOptions extends PropsWithoutRef<JSX.IntrinsicElements["se
   name: string
   /** Field label. */
   label: string
-  data: OptionsForSelect[]
+
   isMulti: boolean
+  canValidate?: boolean
+  onCreate: (value: string) => any
+  queryHook: any
+  customValidation?: (value: any) => any
   /** Field type. Doesn't include radio buttons and checkboxes */
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
 }
 
 export const LabeledSelectAreaField = forwardRef<HTMLTextAreaElement, SelectOptions>(
-  ({ name, label, isMulti, data, outerProps, ...props }, ref) => {
+  ({ name, label, isMulti, onCreate, queryHook, outerProps, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
-    } = useField(name)
-
+    } = useField(name, {
+      ...(props?.canValidate && { validate: props.customValidation! }),
+    })
+    const [option] = useQuery(queryHook, {})
+    const [stateOptions, setStateOptions] = useState(option)
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
 
     return (
@@ -36,7 +44,14 @@ export const LabeledSelectAreaField = forwardRef<HTMLTextAreaElement, SelectOpti
             {...input}
             isDisabled={submitting}
             {...props}
-            options={data}
+            options={stateOptions}
+            onCreateOption={async (x) => {
+              try {
+                await onCreate(x)
+                invalidateQuery(queryHook)
+                setStateOptions(() => [...stateOptions, { label: x, value: x }])
+              } catch (err) {}
+            }}
             ref={ref}
             components={animatedComponents}
             isMulti={isMulti}

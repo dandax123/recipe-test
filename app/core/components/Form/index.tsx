@@ -11,7 +11,8 @@ export interface FormProps<S extends z.ZodType<any, any>>
   submitText?: string
   headingText?: String
   bottomLink?: String
-  applyFunction: <T>(values: T) => any
+  shouldApplyFunction?: boolean
+  applyFunction?: <T>(values: T) => any
   schema?: S
   onSubmit: FinalFormProps<z.infer<S>>["onSubmit"]
   initialValues?: FinalFormProps<z.infer<S>>["initialValues"]
@@ -23,6 +24,7 @@ export function Form<S extends z.ZodType<any, any>>({
   headingText,
   bottomLink,
   schema,
+  shouldApplyFunction = false,
   initialValues,
   applyFunction = defaultFunction,
   onSubmit,
@@ -34,14 +36,18 @@ export function Form<S extends z.ZodType<any, any>>({
       validate={(values) => {
         if (!schema) return
         try {
-          schema.parse(applyFunction(values))
+          const updatedValues = shouldApplyFunction ? applyFunction(values) : values
+
+          schema.parse(updatedValues)
         } catch (error) {
-          console.error(error)
-          return error.formErrors.fieldErrors
+          // console.error(error?.formErrors)
+          return error?.formErrors?.fieldErrors
+          // return undefined
         }
       }}
       onSubmit={onSubmit}
       render={({ handleSubmit, submitting, submitError, values }) => {
+        console.log(values)
         return (
           <form onSubmit={handleSubmit} className="p-3 bg-white rounded flex  flex-col" {...props}>
             {headingText && <p className="mb-1 text-xl uppercase text-blue-600">{headingText}</p>}

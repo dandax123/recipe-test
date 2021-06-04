@@ -9,6 +9,8 @@ export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElem
   /** Field type. Doesn't include radio buttons and checkboxes */
   type?: "text" | "password" | "email" | "number" | "search" | "text-area"
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
+  canValidate?: boolean
+  customValidation?: (value: any) => any
 }
 
 export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldProps>(
@@ -18,6 +20,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
       meta: { touched, error, submitError, submitting },
     } = useField(name, {
       parse: props.type === "number" ? Number : undefined,
+      ...(props?.canValidate && { validate: props.customValidation! }),
     })
 
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError

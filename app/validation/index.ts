@@ -12,19 +12,18 @@ export const addMeal = z.object({
   description: z.string().nonempty(),
   cookTime: z.number().min(2),
   image: z.string().nonempty(),
-  recipe: z.object({
-    instruction: z.string().nonempty(),
-    ingredients: z
-      .array(
-        z.object({
-          qty: z.number(),
-          name: z.string(),
-          measure: z.string(),
-        })
-      )
-      .nonempty()
-      .min(2),
-  }),
+  instruction: z.string().nonempty(),
+  ingredients: z
+    .array(
+      z.object({
+        qty: z.number(),
+        name: z.string(),
+        measure: z.object({ value: z.string() }),
+      })
+    )
+    .nonempty()
+    .min(2),
+
   category: z
     .array(
       z.object({
@@ -33,6 +32,13 @@ export const addMeal = z.object({
     )
     .min(1),
 })
+export const createCategoryValidation = z.object({ title: z.string() })
+export const ingredientsValidation = z.object({
+  qty: z.number(),
+  name: z.string(),
+  measure: z.string(),
+})
+
 export const Login = z.object({
   email: z.string().email(),
   password: z.string(),

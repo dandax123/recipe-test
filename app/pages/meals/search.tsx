@@ -1,15 +1,17 @@
 import { Suspense } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getCategories from "app/categories/queries/getCategories"
-import getPaginatedCategories from "app/categories/queries/getPaginatedCategories"
+import { Meal } from "app/core/components"
+import searchMeals from "app/meals/queries/searchMeals"
 
-const ITEMS_PER_PAGE = 100
+const ITEMS_PER_PAGE = 5
 
-export const CategoriesList = () => {
+export const MealsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
-  const [{ categories, hasMore }] = usePaginatedQuery(getPaginatedCategories, {
+
+  const [{ meals, hasMore }] = usePaginatedQuery(searchMeals, {
+    search: "test",
     orderBy: { id: "asc" },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
@@ -20,15 +22,16 @@ export const CategoriesList = () => {
 
   return (
     <div>
-      <ul>
-        {categories.map((category) => (
-          <li key={category.id}>
-            <Link href={Routes.ShowCategoryPage({ categoryId: category.id })}>
-              <a>{category.title}</a>
-            </Link>
-          </li>
+      <div className="grid sm:grid-cols-3 md:grid-cols-3 lg:md-grid-cols-4 gap-10 md:gap-2 p-2">
+        {meals.map((meal) => (
+          <Meal meal={meal} key={meal.id} />
         ))}
-      </ul>
+      </div>
+      {/* <li key={meal.id}>
+          <Link href={Routes.ShowMealPage({ mealId: meal.id })}>
+            <a>{meal.title}</a>
+          </Link>
+        </li> */}
 
       <button disabled={page === 0} onClick={goToPreviousPage}>
         Previous
@@ -40,29 +43,29 @@ export const CategoriesList = () => {
   )
 }
 
-const CategoriesPage: BlitzPage = () => {
+const MealsPage: BlitzPage = () => {
   return (
     <>
       <Head>
-        <title>Categories</title>
+        <title>Meals</title>
       </Head>
 
       <div>
         <p>
-          <Link href={Routes.NewCategoryPage()}>
-            <a>Create Category</a>
+          <Link href={Routes.NewMealPage()}>
+            <a>Create Meal</a>
           </Link>
         </p>
 
         <Suspense fallback={<div>Loading...</div>}>
-          <CategoriesList />
+          <MealsList />
         </Suspense>
       </div>
     </>
   )
 }
 
-CategoriesPage.authenticate = true
-CategoriesPage.getLayout = (page) => <Layout>{page}</Layout>
+MealsPage.authenticate = false
+MealsPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default CategoriesPage
+export default MealsPage

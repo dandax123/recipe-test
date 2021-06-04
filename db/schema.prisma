@@ -65,7 +65,7 @@ model Meal {
   authorId    Int?
   favorite    User?      @relation(fields: [favoriteId], references: [id], name: "favoriteToMeal")
   favoriteId  Int?
-  title       String?
+  title       String
   description String
   cookTime    Int
   image       String
@@ -81,14 +81,22 @@ model Recipe {
   meal        Meal?
 }
 
-model Ingredient {
-  id       Int     @id @default(autoincrement())
-  name     String
-  qty      Int
-  measure  String
-  Recipe   Recipe? @relation(fields: [recipeId], references: [id])
-  recipeId Int?
+model Measures {
+  id   Int    @id @default(autoincrement())
+  name String @unique
 
+  ingredients Ingredient[]
+}
+
+model Ingredient {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  qty      Int
+  Recipe   Recipe?   @relation(fields: [recipeId], references: [id])
+  recipeId Int?
+  measures Measures? @relation(fields: [measuresId], references: [name])
+
+  measuresId String?
 }
 
 model Category {
