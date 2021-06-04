@@ -1,8 +1,8 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getRecipe from "app/recipes/queries/getRecipe"
-import deleteRecipe from "app/recipes/mutations/deleteRecipe"
+import getRecipe from "app/modules/recipes/queries/getRecipe"
+import deleteRecipe from "app/modules/recipes/mutations/deleteRecipe"
 
 export const Recipe = () => {
   const router = useRouter()

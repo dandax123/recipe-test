@@ -1,9 +1,9 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getMeal from "app/meals/queries/getMeal"
-import updateMeal from "app/meals/mutations/updateMeal"
-import { MealForm, FORM_ERROR } from "app/meals/components/MealForm"
+import getMeal from "app/modules/meals/queries/getMeal"
+import updateMeal from "app/modules/meals/mutations/updateMeal"
+import { MealForm, FORM_ERROR } from "app/modules/meals/components/MealForm"
 
 export const EditMeal = () => {
   const router = useRouter()

@@ -1,7 +1,7 @@
 import { useMutation } from "blitz"
 import { LabeledTextField } from "app/core/components/Form/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
-import signup from "app/auth/mutations/signup"
+import signup from "app/modules/auth/mutations/signup"
 import { Signup } from "app/validation"
 
 type SignupFormProps = {

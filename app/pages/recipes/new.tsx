@@ -1,7 +1,7 @@
 import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import createRecipe from "app/recipes/mutations/createRecipe"
-import { RecipeForm, FORM_ERROR } from "app/recipes/components/RecipeForm"
+import createRecipe from "app/modules/recipes/mutations/createRecipe"
+import { RecipeForm, FORM_ERROR } from "app/modules/recipes/components/RecipeForm"
 
 const NewRecipePage: BlitzPage = () => {
   const router = useRouter()

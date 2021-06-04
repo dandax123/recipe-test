@@ -1,9 +1,9 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getRecipe from "app/recipes/queries/getRecipe"
-import updateRecipe from "app/recipes/mutations/updateRecipe"
-import { RecipeForm, FORM_ERROR } from "app/recipes/components/RecipeForm"
+import getRecipe from "app/modules/recipes/queries/getRecipe"
+import updateRecipe from "app/modules/recipes/mutations/updateRecipe"
+import { RecipeForm, FORM_ERROR } from "app/modules/recipes/components/RecipeForm"
 
 export const EditRecipe = () => {
   const router = useRouter()

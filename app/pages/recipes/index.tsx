@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getRecipes from "app/recipes/queries/getRecipes"
+import getRecipes from "app/modules/recipes/queries/getRecipes"
 
 const ITEMS_PER_PAGE = 100
 

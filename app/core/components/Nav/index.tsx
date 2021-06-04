@@ -2,9 +2,7 @@ import { useRouter } from "@blitzjs/core"
 import { Suspense } from "react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { useMutation, Link, Routes } from "blitz"
-import logout from "app/auth/mutations/logout"
-
-import NavItem from "./NavItem"
+import logout from "app/modules/auth/mutations/logout"
 import { Button } from ".."
 import Search from "../Search"
 

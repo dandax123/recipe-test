@@ -1,6 +1,6 @@
 import { resolver, SecurePassword, hash256 } from "blitz"
 import db from "db"
-import { ResetPassword } from "../../validation"
+import { ResetPassword } from "../../../validation"
 import login from "./login"
 
 export class ResetPasswordError extends Error {

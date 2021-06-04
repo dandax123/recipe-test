@@ -1,8 +1,8 @@
 import { Suspense } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getCategories from "app/categories/queries/getCategories"
-import getPaginatedCategories from "app/categories/queries/getPaginatedCategories"
+import getCategories from "app/modules/categories/queries/getCategories"
+import getPaginatedCategories from "app/modules/categories/queries/getPaginatedCategories"
 
 const ITEMS_PER_PAGE = 100
 

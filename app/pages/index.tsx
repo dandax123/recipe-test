@@ -3,7 +3,7 @@ import { Link, BlitzPage, useMutation, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import { Image } from "blitz"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import logout from "app/auth/mutations/logout"
+import logout from "app/modules/auth/mutations/logout"
 import { Meal } from "../core/components"
 
 /*

@@ -9,10 +9,10 @@ import LabeledSelectAreaField from "./LabeledSelectField"
 import LabeledTextAreaField from "./LabeledTextAreaField"
 import { ingredientsValidation } from "app/validation"
 import { useMutation, useQuery } from "blitz"
-import getIngredientsMeasures from "app/meals/queries/getIngredientsMeasures"
-import getCategories from "app/categories/queries/getCategories"
-import createCategory from "app/categories/mutations/createCategory"
-import addIngredientsMutation from "app/meals/mutations/addIngredientMeasures"
+import getIngredientsMeasures from "app/modules/meals/queries/getIngredientsMeasures"
+import getCategories from "app/modules/categories/queries/getCategories"
+import createCategory from "app/modules/categories/mutations/createCategory"
+import addIngredientsMutation from "app/modules/meals/mutations/addIngredientMeasures"
 
 export interface FormProps<S extends z.ZodType<any, any>>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
@@ -54,6 +54,8 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
 }: FormProps<S>) {
   const [categoryMutation] = useMutation(createCategory)
   const [ingredientsMutation] = useMutation(addIngredientsMutation)
+  const [categoryData] = useQuery(getCategories, {})
+  const [measuresData] = useQuery(getIngredientsMeasures, {})
   const addCategory = async (category) => {
     await categoryMutation({ title: category })
   }
@@ -98,11 +100,9 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
         handleSubmit,
         form: {
           mutators: { push, pop },
-        }, // injected from final-form-arrays above
-        pristine,
+        },
         submitting,
         submitError,
-        values,
       }) => {
         // push?.("ingredients", undefined)
         return (
@@ -127,7 +127,7 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                       name="category"
                       label="Category"
                       placeholder="Name"
-                      queryHook={getCategories}
+                      data={categoryData}
                       onCreate={addCategory}
                       isMulti
                     />
@@ -140,6 +140,7 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                       label="Cook Time(Mins)"
                       placeholder="cookTime"
                       type="number"
+                      min={1}
                     />
                   </div>
                   <div className="col-span-1">
@@ -191,13 +192,14 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                                     label="Qty"
                                     placeholder="1"
                                     type="number"
+                                    min={1}
                                   />
                                 </div>
                                 <div className="col-span-3">
                                   <LabeledSelectAreaField
                                     canValidate
                                     isMulti={false}
-                                    queryHook={getIngredientsMeasures}
+                                    data={measuresData}
                                     onCreate={addIngredients}
                                     customValidation={(value) => {
                                       return customValidation(

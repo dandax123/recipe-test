@@ -8,7 +8,7 @@ import {
   useQueryErrorResetBoundary,
 } from "blitz"
 import { ErrorBoundary } from "react-error-boundary"
-import LoginForm from "app/auth/components/LoginForm"
+import LoginForm from "app/modules/auth/components/LoginForm"
 import { Suspense } from "react"
 import "normalize.css"
 import "app/core/styles/index.css"

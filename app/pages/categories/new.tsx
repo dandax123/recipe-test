@@ -1,8 +1,8 @@
 import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import createCategory from "app/categories/mutations/createCategory"
+import createCategory from "app/modules/categories/mutations/createCategory"
 import { createCategoryValidation } from "../../validation"
-import { CategoryForm, FORM_ERROR } from "app/categories/components/CategoryForm"
+import { CategoryForm, FORM_ERROR } from "app/modules/categories/components/CategoryForm"
 
 const NewCategoryPage: BlitzPage = () => {
   const router = useRouter()

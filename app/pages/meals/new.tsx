@@ -8,8 +8,8 @@ import {
   InferGetStaticPropsType,
 } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import createMeal from "app/meals/mutations/createMeal"
-import { MealForm, FORM_ERROR } from "app/meals/components/MealForm"
+import createMeal from "app/modules/meals/mutations/createMeal"
+import { MealForm, FORM_ERROR } from "app/modules/meals/components/MealForm"
 import { z } from "zod"
 import { addMeal } from "app/validation"
 
@@ -32,12 +32,6 @@ const NewMealPage: BlitzPage = () => {
   const router = useRouter()
   const [createMealMutation] = useMutation(createMeal)
 
-  // try {
-  // } catch (err) {
-  //   console.log(err)
-  // }
-  // const options = categories.
-  // console.log(categories)
   return (
     <div className="grid w-full h-full p-4">
       <h1>Create a meal</h1>

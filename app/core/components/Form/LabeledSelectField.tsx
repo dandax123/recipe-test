@@ -18,22 +18,23 @@ export interface SelectOptions extends PropsWithoutRef<JSX.IntrinsicElements["se
   isMulti: boolean
   canValidate?: boolean
   onCreate: (value: string) => any
-  queryHook: any
+  data: OptionsForSelect[]
   customValidation?: (value: any) => any
   /** Field type. Doesn't include radio buttons and checkboxes */
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
 }
 
 export const LabeledSelectAreaField = forwardRef<HTMLTextAreaElement, SelectOptions>(
-  ({ name, label, isMulti, onCreate, queryHook, outerProps, ...props }, ref) => {
+  ({ name, label, isMulti, onCreate, data, outerProps, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
     } = useField(name, {
       ...(props?.canValidate && { validate: props.customValidation! }),
     })
-    const [option] = useQuery(queryHook, {})
-    const [stateOptions, setStateOptions] = useState(option)
+
+    const [stateOptions, setStateOptions] = useState(data)
+
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
 
     return (
@@ -48,7 +49,7 @@ export const LabeledSelectAreaField = forwardRef<HTMLTextAreaElement, SelectOpti
             onCreateOption={async (x) => {
               try {
                 await onCreate(x)
-                invalidateQuery(queryHook)
+                // invalidateQuery(queryHook)
                 setStateOptions(() => [...stateOptions, { label: x, value: x }])
               } catch (err) {}
             }}

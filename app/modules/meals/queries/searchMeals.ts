@@ -25,6 +25,9 @@ export default resolver.pipe(async ({ search, orderBy, skip = 0, take = 2 }: Get
         ...paginateArgs,
         where,
         orderBy,
+        include: {
+          Category: true,
+        },
       }),
   })
 

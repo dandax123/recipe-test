@@ -1,8 +1,8 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getMeal from "app/meals/queries/getMeal"
-import deleteMeal from "app/meals/mutations/deleteMeal"
+import getMeal from "app/modules/meals/queries/getMeal"
+import deleteMeal from "app/modules/meals/mutations/deleteMeal"
 
 export const Meal = () => {
   const router = useRouter()

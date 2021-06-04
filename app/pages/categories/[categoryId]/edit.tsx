@@ -1,9 +1,9 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getCategory from "app/categories/queries/getCategory"
-import updateCategory from "app/categories/mutations/updateCategory"
-import { CategoryForm, FORM_ERROR } from "app/categories/components/CategoryForm"
+import getCategory from "app/modules/categories/queries/getCategory"
+import updateCategory from "app/modules/categories/mutations/updateCategory"
+import { CategoryForm, FORM_ERROR } from "app/modules/categories/components/CategoryForm"
 
 export const EditCategory = () => {
   const router = useRouter()

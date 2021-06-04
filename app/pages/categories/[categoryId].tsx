@@ -1,8 +1,8 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getCategory from "app/categories/queries/getCategory"
-import deleteCategory from "app/categories/mutations/deleteCategory"
+import getCategory from "app/modules/categories/queries/getCategory"
+import deleteCategory from "app/modules/categories/mutations/deleteCategory"
 
 export const Category = () => {
   const router = useRouter()

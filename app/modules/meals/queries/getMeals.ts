@@ -15,7 +15,15 @@ export default resolver.pipe(async ({ where, orderBy, skip = 0, take = 2 }: GetM
     skip,
     take,
     count: () => db.meal.count({ where }),
-    query: (paginateArgs) => db.meal.findMany({ ...paginateArgs, where, orderBy }),
+    query: (paginateArgs) =>
+      db.meal.findMany({
+        ...paginateArgs,
+        where,
+        orderBy,
+        include: {
+          Category: true,
+        },
+      }),
   })
 
   return {

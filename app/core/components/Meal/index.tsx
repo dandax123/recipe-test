@@ -1,17 +1,17 @@
-import { Meal } from "@prisma/client"
+import { Category, Meal } from "@prisma/client"
 import { Image, Routes, Router } from "blitz"
 interface MealComponentProps {
-  meal: Meal
+  meal: Meal & { Category: Category[] }
 }
 const MealComponent: React.FC<MealComponentProps> = ({ meal }) => {
   return (
     <>
       <div
         className="relative md:m-3 p-2 shadow-md hover:shadow-md hover:bg-gray-100 rounded-lg bg-white overflow-hidden"
-        onClick={() => Router.push(`meals/${meal.id}`)}
+        onClick={() => Router.push(`/meals/${meal.id}`)}
       >
         <img
-          src="https://picsum.photos/id/247/2106/1404"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz0FGX1ljvkX_Y_Rop7el4hBCP-PRU6YLAMQ&usqp=CAU"
           alt=""
           //   width={220}
           //   height={200}
@@ -34,8 +34,15 @@ const MealComponent: React.FC<MealComponentProps> = ({ meal }) => {
           </svg>
           <span className="ml-1 mt-1 mr-1">{`${meal.cookTime} mins`}</span>
         </div>
-        <div className="p-2">
-          <h3 className="font-medium text-gray-600 text-lg my-2 uppercase">{`${meal.title}`}</h3>
+        <div className="p-1">
+          {meal.Category.map((category) => {
+            return (
+              <div className="bg-blue-200 py-1 px-3  text-sm text-black mb-2 w-max rounded-sm ">
+                #{category.title}
+              </div>
+            )
+          })}
+          <h3 className="font-medium text-gray-600 text-lg mt-1 uppercase">{`${meal.title}`}</h3>
           <p className="text-justify">{`${meal.description}`}</p>
         </div>
       </div>
