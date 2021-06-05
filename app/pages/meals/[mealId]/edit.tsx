@@ -8,7 +8,7 @@ import { MealForm, FORM_ERROR } from "app/modules/meals/components/MealForm"
 export const EditMeal = () => {
   const router = useRouter()
   const mealId = useParam("mealId", "number")
-  const [meal, { setQueryData }] = useQuery(getMeal, { id: mealId })
+  const [meal] = useQuery(getMeal, { id: mealId })
   const [updateMealMutation] = useMutation(updateMeal)
 
   return (
@@ -34,7 +34,7 @@ export const EditMeal = () => {
                 id: meal.id,
                 ...values,
               })
-              await setQueryData(updated)
+              // await setQueryData(updated)
               router.push(Routes.ShowMealPage({ mealId: updated.id }))
             } catch (error) {
               console.error(error)

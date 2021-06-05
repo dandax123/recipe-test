@@ -11,7 +11,7 @@ export const getFavorite = resolver.pipe(resolver.authorize(), async ({ id }, ct
       },
     },
   })
-  return isFavorite
+  return isFavorite ? true : false
 })
 
 export default getFavorite

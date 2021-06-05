@@ -29,6 +29,7 @@ const Search = ({}) => {
           <div
             className="absolute right-0 rounded-r-lg bottom-0 bg-black text-white p-3 cursor-pointer"
             onClick={handleSubmit}
+            role="button"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

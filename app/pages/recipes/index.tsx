@@ -23,7 +23,7 @@ export const RecipesList = () => {
         {recipes.map((recipe) => (
           <li key={recipe.id}>
             <Link href={Routes.ShowRecipePage({ recipeId: recipe.id })}>
-              <a>{recipe.name}</a>
+              <a>{recipe.instruction}</a>
             </Link>
           </li>
         ))}
