@@ -75,9 +75,9 @@ model Meal {
 }
 
 model Recipe {
-  id          Int          @id @default(autoincrement())
-  instruction String
-  ingredients Ingredient[]
+  id          Int                @id @default(autoincrement())
+  instruction String[]
+  ingredients RecipeIngredient[]
   meal        Meal?
 }
 
@@ -85,18 +85,24 @@ model Measures {
   id   Int    @id @default(autoincrement())
   name String @unique
 
-  ingredients Ingredient[]
+  ingredients RecipeIngredient[]
 }
 
-model Ingredient {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  qty      Int
-  Recipe   Recipe?   @relation(fields: [recipeId], references: [id])
-  recipeId Int?
-  measures Measures? @relation(fields: [measuresId], references: [name])
+model IngredientNames {
+  id          Int                @id @default(autoincrement())
+  name        String             @unique
+  ingredients RecipeIngredient[]
+}
 
-  measuresId String?
+model RecipeIngredient {
+  id              Int              @id @default(autoincrement())
+  qty             Int
+  Recipe          Recipe?          @relation(fields: [recipeId], references: [id])
+  recipeId        Int?
+  measures        Measures?        @relation(fields: [measuresId], references: [name])
+  measuresId      String?
+  ingredientNames IngredientNames? @relation(fields: [ingredientName], references: [name])
+  ingredientName  String?
 }
 
 model Category {

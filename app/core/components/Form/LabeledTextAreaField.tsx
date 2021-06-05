@@ -10,15 +10,18 @@ export interface LabeledTextAreaFieldProps
   /** Field type. Doesn't include radio buttons and checkboxes */
   type?: "text" | "password" | "email" | "number" | "search" | "text-area"
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
+  canValidate?: boolean
+  customValidation?: (value: any) => any
 }
 
 export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, LabeledTextAreaFieldProps>(
-  ({ name, label, outerProps, ...props }, ref) => {
+  ({ name, label, outerProps, rows, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
     } = useField(name, {
       parse: props.type === "number" ? Number : undefined,
+      ...(props?.canValidate && { validate: props.customValidation! }),
     })
 
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
@@ -32,7 +35,7 @@ export const LabeledTextAreaField = forwardRef<HTMLTextAreaElement, LabeledTextA
             disabled={submitting}
             {...props}
             ref={ref}
-            rows={4}
+            rows={rows}
             className="w-full p-0.5 rounded-sm "
           />
         </label>

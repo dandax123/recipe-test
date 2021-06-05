@@ -49,7 +49,7 @@ export function Form<S extends z.ZodType<any, any>>({
       render={({ handleSubmit, submitting, submitError, values }) => {
         console.log(values)
         return (
-          <form onSubmit={handleSubmit} className="p-3 bg-white rounded flex  flex-col" {...props}>
+          <form onSubmit={handleSubmit} className="p-3 bg-white  flex  flex-col" {...props}>
             {headingText && <p className="mb-1 text-xl uppercase text-blue-600">{headingText}</p>}
             {/* Form fields supplied as children are rendered here */}
             {children}
@@ -63,7 +63,7 @@ export function Form<S extends z.ZodType<any, any>>({
             {submitText && (
               <button
                 type="submit"
-                className="bg-primary hover:bg-secondary-100 hover:text-primary text-white font-bold p-2 rounded w-80 my-4 mx-auto"
+                className="bg-primary hover:bg-secondary-100 hover:text-primary text-white font-bold p-2 rounded w-80 my-3 mx-auto"
                 disabled={submitting}
               >
                 {submitText}

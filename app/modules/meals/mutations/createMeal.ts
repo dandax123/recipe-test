@@ -2,7 +2,6 @@ import { addMeal } from "app/validation"
 import { resolver } from "blitz"
 import db from "db"
 import capitalize from "capitalize"
-import { z } from "zod"
 
 export default resolver.pipe(resolver.zod(addMeal), resolver.authorize(), async (input, ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
@@ -18,11 +17,15 @@ export default resolver.pipe(resolver.zod(addMeal), resolver.authorize(), async 
       image: input.image,
       Recipe: {
         create: {
-          instruction: input.instruction,
+          instruction: input.instruction.map((x) => x.instruction),
           ingredients: {
             create: input.ingredients.map((x) => ({
               qty: x.qty,
-              name: x.name,
+              ingredientNames: {
+                connect: {
+                  name: capitalize(x.name.value),
+                },
+              },
               measures: {
                 connect: {
                   name: capitalize(x.measure.value),
@@ -42,6 +45,11 @@ export default resolver.pipe(resolver.zod(addMeal), resolver.authorize(), async 
   })
   return meal
 })
+// input.ingredients.map((x) => ({
+//   qty: x.qty,
+//   name: x.name,
+//
+// }))
 // author: {
 //   connect
 // }
@@ -56,3 +64,5 @@ export default resolver.pipe(resolver.zod(addMeal), resolver.authorize(), async 
 //   where:
 // }
 // }
+// const x : RecipeIngredientCreateNestedManyWithoutRecipeInput
+// const y: RecipeIngredientCreateNew

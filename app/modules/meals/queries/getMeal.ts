@@ -17,11 +17,17 @@ export default resolver.pipe(resolver.zod(GetMeal), async ({ id }) => {
           ingredients: {
             include: {
               measures: true,
+              ingredientNames: true,
             },
           },
         },
       },
       Category: true,
+      author: {
+        select: {
+          name: true,
+        },
+      },
     },
   })
 

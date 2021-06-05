@@ -10,4 +10,5 @@ __#next {
   min-width: 100%;
   min-height: 100vh;
   overflow: auto;
+  background-color: #f2f2f2;
 }

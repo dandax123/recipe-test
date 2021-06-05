@@ -1,12 +1,4 @@
-import {
-  Link,
-  useRouter,
-  useMutation,
-  BlitzPage,
-  Routes,
-  useQuery,
-  InferGetStaticPropsType,
-} from "blitz"
+import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import createMeal from "app/modules/meals/mutations/createMeal"
 import { MealForm, FORM_ERROR } from "app/modules/meals/components/MealForm"
@@ -14,12 +6,12 @@ import { z } from "zod"
 import { addMeal } from "app/validation"
 
 export const applyFunction = (values): z.infer<typeof addMeal> => {
-  // console.log(values)
   const x: z.infer<typeof addMeal> = {
     ...values,
     category: values?.category?.map(({ label }) => ({
       title: label,
     })),
+    // instruction: values?.instruction?.map((x) => x.instruction),
   }
   return x
 }

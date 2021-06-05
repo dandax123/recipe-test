@@ -1,7 +1,6 @@
-import { ReactNode, PropsWithoutRef } from "react"
+import { ReactNode, PropsWithoutRef, useRef, useEffect } from "react"
 import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
 import { z } from "zod"
-export { FORM_ERROR } from "final-form"
 import arrayMutators from "final-form-arrays"
 import { FieldArray } from "react-final-form-arrays"
 import LabeledTextField from "./LabeledTextField"
@@ -9,11 +8,12 @@ import LabeledSelectAreaField from "./LabeledSelectField"
 import LabeledTextAreaField from "./LabeledTextAreaField"
 import { ingredientsValidation } from "app/validation"
 import { useMutation, useQuery } from "blitz"
-import getIngredientsMeasures from "app/modules/meals/queries/getIngredientsMeasures"
+import getIngredientsMeasures from "app/modules/meals/queries/getIngredients"
 import getCategories from "app/modules/categories/queries/getCategories"
 import createCategory from "app/modules/categories/mutations/createCategory"
-import addIngredientsMutation from "app/modules/meals/mutations/addIngredientMeasures"
-
+import addIngredientsMutation from "app/modules/meals/mutations/addIngredients"
+import addIngredientName from "app/modules/meals/mutations/addIngredientName"
+export { FORM_ERROR } from "final-form"
 export interface FormProps<S extends z.ZodType<any, any>>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
   /** All your form fields */
@@ -29,6 +29,7 @@ export interface FormProps<S extends z.ZodType<any, any>>
 }
 const defaultFunction = (values) => values
 const customValidation = (schema: z.ZodAny, value: any) => {
+  // console.log(value)
   try {
     schema.parse(value)
   } catch (error) {
@@ -54,8 +55,21 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
 }: FormProps<S>) {
   const [categoryMutation] = useMutation(createCategory)
   const [ingredientsMutation] = useMutation(addIngredientsMutation)
+  const [addIngredientNameMutation] = useMutation(addIngredientName)
   const [categoryData] = useQuery(getCategories, {})
   const [measuresData] = useQuery(getIngredientsMeasures, {})
+  const addIngredientRef = useRef()
+  const addInstructionRef = useRef()
+
+  useEffect(() => {
+    if ("current" in addIngredientRef) {
+      addIngredientRef.current.click()
+      addIngredientRef.current.click()
+    }
+    if ("current" in addInstructionRef) {
+      addInstructionRef.current.click()
+    }
+  }, [])
   const addCategory = async (category) => {
     await categoryMutation({ title: category })
   }
@@ -71,25 +85,24 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
         try {
           schema.parse(applyFunction(values))
         } catch (error) {
-          const pureIngredientsError = error.errors.find(
-            (x) => "ingredients" === x.path.reduce((acc, curr) => acc + curr, "")
-          )?.message
-          //   console.log(error?.formErrors?.fieldErrors)
+          const pureManualError = error.errors
+            .filter((x) => {
+              const path = x.path.reduce((acc, curr) => acc + curr, "")
+              if (path === "ingredients" || path === "instruction") {
+                return true
+              }
+              return false
+            })
+            .reduce((acc, curr) => ({ ...acc, [`${curr.path}Error`]: [curr.message] }), {})
+
+          // console.log(error?.formErrors)
+
           const y = {
             ...error?.formErrors?.fieldErrors,
-            ingredientsError: [
-              pureIngredientsError === "Required"
-                ? "At least two ingredients are required. Click the 'Add Ingredients' to add ingredients"
-                : pureIngredientsError,
-            ],
+            ...pureManualError,
           }
+          console.log(y)
           return y
-          //   console.log(error.issues)
-
-          //   console.log("x:", x)
-          //   console.log("standard:", error?.formErrors)
-          //   return { ...error, errors: x }?.formErrors?.fieldErrors
-          // return undefined
         }
       }}
       mutators={{
@@ -99,7 +112,7 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
       render={({
         handleSubmit,
         form: {
-          mutators: { push, pop },
+          mutators: { push },
         },
         submitting,
         submitError,
@@ -153,33 +166,73 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                 </div>
                 <div className="grid grid-col-1">
                   <div className="col-span-1">
-                    <LabeledTextAreaField name="description" label="Meal Description" />
+                    <LabeledTextAreaField name="description" label="Meal Description" rows={2} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1">
+                  <div>
+                    <h1>Recipe Instruction</h1>
+
+                    <FieldArray name="instruction">
+                      {({ fields }) =>
+                        fields.map((name, index) => {
+                          return (
+                            <div className="grid grid-cols-1" key={index}>
+                              <div className="col-span-1">
+                                <LabeledTextAreaField
+                                  name={`${name}.instruction`}
+                                  label={`Step ${index + 1}`}
+                                  rows={3}
+                                  canValidate
+                                  customValidation={(x) =>
+                                    customValidation(
+                                      z.object({
+                                        instruction: z
+                                          .string()
+                                          .nonempty("Provide the instruction for this step")
+                                          .min(
+                                            20,
+                                            "This instruction should contains at least 20 characters"
+                                          ),
+                                      }),
+                                      {
+                                        instruction: x,
+                                      }
+                                    )
+                                  }
+                                />
+                              </div>
+                            </div>
+                          )
+                        })
+                      }
+                    </FieldArray>
+                    <button
+                      className="block px-3 py-1 rounded-md text-black shadow-lg bg-gray-300 font-normal mt-5 "
+                      type="button"
+                      ref={addInstructionRef}
+                      onClick={() => push?.("instruction", undefined)}
+                    >
+                      Add Instruction
+                    </button>
+                    <div className="grid md:grid-cols-2 gap-3 md:mb-0">
+                      <div className="col-span-2">
+                        <LabeledTextAreaField name="instructionError" label="" hidden />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
               <div className="col-span-1 ">
-                <div className="grid md:grid-cols-2 gap-3 md:mb-10">
-                  <div className="col-span-2">
-                    <button
-                      className="block px-3 py-1 rounded-md bg-blue-100 text-primary"
-                      type="button"
-                      onClick={() => push?.("ingredients", undefined)}
-                    >
-                      Add Ingredient
-                    </button>
-                    <LabeledTextAreaField name="ingredientsError" label="" hidden />
-                  </div>
-                </div>
-
                 <div className="grid grid-col-1">
-                  <div className="grid md:grid-cols-2 gap-3">
+                  <div className="grid md:grid-cols-2 gap-0">
                     <div className="col-span-2">
                       <FieldArray name="ingredients">
                         {({ fields }) =>
                           fields.map((name, index) => {
                             //   console.log(name)
                             return (
-                              <div key={name} className="grid md:grid-cols-12 gap-4 mb-3">
+                              <div key={name} className="grid md:grid-cols-12 gap-4 mb-0">
                                 <div className="col-span-2">
                                   <LabeledTextField
                                     canValidate
@@ -199,9 +252,10 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                                   <LabeledSelectAreaField
                                     canValidate
                                     isMulti={false}
-                                    data={measuresData}
+                                    data={measuresData.categories}
                                     onCreate={addIngredients}
                                     customValidation={(value) => {
+                                      // console.log(value)
                                       return customValidation(
                                         ingredientsValidation.pick({ measure: true }),
                                         {
@@ -215,17 +269,23 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                                   />
                                 </div>
                                 <div className="col-span-5">
-                                  <LabeledTextField
+                                  <LabeledSelectAreaField
                                     canValidate
-                                    customValidation={(name) =>
-                                      customValidation(ingredientsValidation.pick({ name: true }), {
-                                        name,
-                                      })
-                                    }
+                                    isMulti={false}
+                                    data={measuresData.ingredientsName}
+                                    onCreate={addIngredientNameMutation}
+                                    customValidation={(name) => {
+                                      console.log(name)
+                                      return customValidation(
+                                        ingredientsValidation.pick({ name: true }),
+                                        {
+                                          name: name?.value,
+                                        }
+                                      )
+                                    }}
                                     name={`${name}.name`}
                                     label="Name"
                                     placeholder="Salt"
-                                    type="text"
                                   />
                                 </div>
                                 <div className="col-span-2">
@@ -255,17 +315,24 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                           })
                         }
                       </FieldArray>
+                      <button
+                        className="block px-3 py-1 rounded-md text-black shadow-lg bg-gray-300 font-normal mt-5 "
+                        type="button"
+                        ref={addIngredientRef}
+                        onClick={() => push?.("ingredients", undefined)}
+                      >
+                        Add Ingredient
+                      </button>
+                      <div className="grid md:grid-cols-2 gap-3 md:mb-0">
+                        <div className="col-span-2">
+                          <LabeledTextAreaField name="ingredientsError" label="" hidden />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1">
-                  <div className="col-span-1">
-                    <LabeledTextAreaField name="instruction" label="Recipe Instruction" />
                   </div>
                 </div>
               </div>
             </div>
-
             {submitText && (
               <button
                 type="submit"

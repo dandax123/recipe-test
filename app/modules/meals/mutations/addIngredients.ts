@@ -14,4 +14,11 @@ export const addIngredientsMutation = resolver.pipe(
     })
   }
 )
+// export const addIngredientName = resolver.pipe(resolver.zod(validateMeasure), async (input) => {
+//   await db.ingredientNames.create({
+//     data: {
+//       name: capitalize(input.name),
+//     },
+//   })
+// })
 export default addIngredientsMutation

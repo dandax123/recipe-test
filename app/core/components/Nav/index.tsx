@@ -33,7 +33,9 @@ const UserInfo = ({ currentUser }) => {
   } else {
     return (
       <>
-        <Button.PrimaryButton text="Sign up" onClick={() => {}} />
+        <Button.PrimaryButton onClick={() => router.push("/auth/signup")}>
+          Sign up
+        </Button.PrimaryButton>
 
         <Link href={Routes.LoginPage()}>
           <a className="block px-4 py-2 rounded-md text-indigo-200 ">
@@ -48,14 +50,16 @@ const AppBar = () => {
   const router = useRouter()
   const currentUser = useCurrentUser()
 
-  const isActive = (path) => {
-    return router.pathname.startsWith(path)
-  }
+  // const isActive = (path) => {
+  //   return router.pathname.startsWith(path)
+  // }
 
   return (
     <nav className="p-3  bg-primary max-h-20 ">
       <div className="flex justify-between md:justify-between items-center">
-        <h1 className="font-bold uppercase  flex space-x-4">Recipe Box</h1>
+        <h1 className="font-bold uppercase  flex space-x-4" onClick={() => router.push("/")}>
+          Recipe Box
+        </h1>
         <div className="px-3 cursor-pointer sm:hidden">
           <svg
             xmlns="http://www.w3.org/2000/svg"
