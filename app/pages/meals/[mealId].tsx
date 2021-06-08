@@ -174,27 +174,27 @@ export const Meal = () => {
             <div className="col-span-1 pt-1">Share:</div>
             <div className="col-span-10">
               <div className="mr-2 inline-block">
-                <FacebookShareButton url="https://sdfs">
+                <FacebookShareButton url={`https://recipe-test-phi.vercel.app/meals/${meal.id}`}>
                   <FacebookIcon size={32} borderRadius={12} />
                 </FacebookShareButton>
               </div>
               <div className="mr-2 inline-block">
-                <TwitterShareButton url="https://sdfs">
+                <TwitterShareButton url={`https://recipe-test-phi.vercel.app/meals/${meal.id}`}>
                   <TwitterIcon size={32} borderRadius={12} />
                 </TwitterShareButton>
               </div>
               <div className="mr-2 inline-block">
-                <WhatsappShareButton url="https://sdfs">
+                <WhatsappShareButton url={`https://recipe-test-phi.vercel.app/meals/${meal.id}`}>
                   <WhatsappIcon size={32} borderRadius={12} />
                 </WhatsappShareButton>
               </div>
               <div className="mr-2 inline-block">
-                <TelegramShareButton url="https://sdfs">
+                <TelegramShareButton url={`https://recipe-test-phi.vercel.app/meals/${meal.id}`}>
                   <TelegramIcon size={32} borderRadius={12} />
                 </TelegramShareButton>
               </div>
               <div className="mr-2 inline-block">
-                <RedditShareButton url="https://sdfs">
+                <RedditShareButton url={`https://recipe-test-phi.vercel.app/meals/${meal.id}`}>
                   <RedditIcon size={32} borderRadius={12} />
                 </RedditShareButton>
               </div>
