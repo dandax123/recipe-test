@@ -10,6 +10,9 @@ const config: myBlitzConfig = {
     }),
   ],
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     domains: ["picsum.photos"],
   },
