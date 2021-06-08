@@ -4,6 +4,8 @@ import Layout from "app/core/layouts/Layout"
 import getMeal from "app/modules/meals/queries/getMeal"
 import updateMeal from "app/modules/meals/mutations/updateMeal"
 import { MealForm, FORM_ERROR } from "app/modules/meals/components/MealForm"
+import { applyFunction } from "../new"
+import { addMeal } from "app/validation"
 
 export const EditMeal = () => {
   const router = useRouter()
@@ -18,22 +20,21 @@ export const EditMeal = () => {
       </Head>
 
       <div>
-        <h1>Edit Meal {meal.id}</h1>
-        <pre>{JSON.stringify(meal)}</pre>
+        {/* <h1>Edit Meal {meal.id}</h1> */}
+        {/* <pre>{JSON.stringify(meal)}</pre> */}
 
         <MealForm
           submitText="Update Meal"
           // TODO use a zod schema for form validation
           //  - Tip: extract mutation's schema into a shared `validations.ts` file and
           //         then import and use it here
-          // schema={UpdateMeal}
+          schema={addMeal}
+          applyFunction={applyFunction}
           initialValues={meal}
           onSubmit={async (values) => {
+            const updateValues = { ...applyFunction(values), id: meal.id }
             try {
-              const updated = await updateMealMutation({
-                id: meal.id,
-                ...values,
-              })
+              const updated = await updateMealMutation(updateValues)
               // await setQueryData(updated)
               router.push(Routes.ShowMealPage({ mealId: updated.id }))
             } catch (error) {
@@ -51,16 +52,16 @@ export const EditMeal = () => {
 
 const EditMealPage: BlitzPage = () => {
   return (
-    <div>
+    <div className="w-full h-full">
       <Suspense fallback={<div>Loading...</div>}>
         <EditMeal />
       </Suspense>
 
-      <p>
+      {/* <p>
         <Link href={Routes.MealsPage()}>
           <a>Meals</a>
         </Link>
-      </p>
+      </p> */}
     </div>
   )
 }

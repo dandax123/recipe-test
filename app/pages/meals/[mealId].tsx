@@ -19,6 +19,7 @@ import {
 import favoriteMutation from "app/modules/meals/mutations/addFavorites"
 import { getFavoriteStatus } from "app/core/hooks/useFavorite"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { Modal } from "app/core/components"
 
 export const Meal = () => {
   const router = useRouter()
@@ -26,13 +27,16 @@ export const Meal = () => {
   // const [deleteMealMutation] = useMutation(deleteMeal)
   const [meal] = useQuery(getMeal, { id: mealId })
   const [isFavorite, setFavorite] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [isOwner, setIsOwner] = useState(false)
   const [setFavoriteMutation] = useMutation(favoriteMutation)
   const currentUser = useCurrentUser()
   useEffect(() => {
     const fetchFavoriteState = async () => {
       if (currentUser) {
-        const { isFavorite } = await getFavoriteStatus(meal.id)
+        const { isFavorite, isOwner } = await getFavoriteStatus(meal.id)
         setFavorite(isFavorite)
+        setIsOwner(isOwner)
       }
     }
     fetchFavoriteState()
@@ -67,50 +71,96 @@ export const Meal = () => {
           </h1>
           {meal.Category.map((category) => {
             return (
-              <div className="bg-blue-200 py-1 px-3  text-sm text-black mb-2 w-max rounded-sm ">
+              <div className="bg-blue-200 py-1 px-3  text-sm text-black mb-2 mr-3 w-max rounded-sm inline-block ">
                 #{category.title}
               </div>
             )
           })}
           <div className="grid grid-cols-2">
             <div className="col-span-2">
-              <button
-                className="px-3 py-2 rounded-md shadow-md bg-primary text-white my-2 font-medium outline-none focus:outline-none"
-                onClick={handleFavorite}
-              >
-                {isFavorite ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 inline-block"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+              <div className="flex justify-between">
+                <button
+                  className="px-3 py-2 w-max mr-2 rounded-md shadow-md bg-primary text-white my-2 font-medium outline-none focus:outline-none"
+                  onClick={handleFavorite}
+                >
+                  {isFavorite ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 inline-block"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 inline-block"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
+                  )}
+                  <span className="ml-2 ">
+                    {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                  </span>
+                </button>
+                {isOwner ? (
+                  <button
+                    className="px-3 py-2 rounded-md shadow-md bg-white text-primary my-2 font-medium outline-none focus:outline-none"
+                    onClick={() => router.push(`/meals/${meal.id}/edit`)}
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 inline-block"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 inline-block mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                      />
+                    </svg>
+                    <span className="ml-2 ">Edit Meal</span>
+                  </button>
+                ) : null}
+                {isOwner ? (
+                  <button
+                    className="px-3 py-2 rounded-md shadow-md bg-red-500 text-white my-2 font-medium outline-none focus:outline-none"
+                    onClick={() => setOpen(true)}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                    />
-                  </svg>
-                )}
-                <span className="ml-2 ">
-                  {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-                </span>
-              </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 inline-block"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                    <span className="ml-2 ">Remove Meal</span>
+                  </button>
+                ) : null}
+              </div>
             </div>
             <div className="col-span-2">{meal.description}</div>
             {/* <div>
@@ -173,6 +223,7 @@ export const Meal = () => {
             )
           })}
         </div>
+        <Modal open={open} setOpen={setOpen} mealId={meal.id} />
       </div>
     </>
   )

@@ -3,7 +3,6 @@ import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "bli
 import Layout from "app/core/layouts/Layout"
 import getMeals from "app/modules/meals/queries/getMeals"
 import { Meal } from "app/core/components"
-
 const ITEMS_PER_PAGE = 5
 
 export const MealsList = () => {
@@ -49,13 +48,14 @@ const MealsPage: BlitzPage = () => {
       </Head>
 
       <div>
-        <p>
-          <Link href={Routes.NewMealPage()}>
-            <a>Create Meal</a>
-          </Link>
-        </p>
-
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="w-screen h-screen flex items-center">
+              {/* <Loading /> */}
+              Loading...
+            </div>
+          }
+        >
           <MealsList />
         </Suspense>
       </div>

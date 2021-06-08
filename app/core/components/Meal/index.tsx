@@ -68,7 +68,7 @@ const MealComponent: React.FC<MealComponentProps> = ({ meal }) => {
           <div className="py-2">
             {meal.Category.map((category) => {
               return (
-                <div className="bg-blue-200 py-1 px-3  text-sm text-black  w-max rounded-sm ">
+                <div className="bg-blue-200 py-1 px-3  text-sm text-black  w-max rounded-sm inline-block mr-2 mt-1">
                   #{category.title}
                 </div>
               )

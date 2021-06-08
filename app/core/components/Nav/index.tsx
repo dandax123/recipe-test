@@ -1,7 +1,7 @@
 import { useRouter } from "@blitzjs/core"
 import { Suspense } from "react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import { useMutation, Link, Routes } from "blitz"
+import { useMutation, Link, Image, Routes } from "blitz"
 import logout from "app/modules/auth/mutations/logout"
 import { Button } from ".."
 import Search from "../Search"
@@ -13,14 +13,28 @@ const UserInfo = ({ currentUser }) => {
   if (currentUser) {
     return (
       <>
-        <div className="flex">
-          <span className="align-center">
-            <span className="text-blue-700 font-bold text-sm">Logged in as</span> <br />
-            <code className="text-blue-600 text-xs">{currentUser.name || currentUser.email}</code>
-          </span>
+        <div
+          className="flex items-center text-white cursor-pointer font-bold"
+          onClick={() => router.push("/profile")}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
+          </svg>
+          Profile
         </div>
         <button
-          className="block px-3 py-1 rounded-md bg-blue-100 text-blue-700"
+          className="block px-3 py-2 rounded-md bg-blue-100 text-blue-700"
           onClick={async () => {
             await logoutMutation()
             router.push(Routes.Home())
@@ -55,11 +69,12 @@ const AppBar = () => {
   // }
 
   return (
-    <nav className="p-3  bg-primary max-h-20 ">
+    <nav className="p-1  bg-primary max-h-20 ">
       <div className="flex justify-between md:justify-between items-center">
-        <h1 className="font-bold uppercase  flex space-x-4" onClick={() => router.push("/")}>
-          Recipe Box
-        </h1>
+        <div className="cursor-pointer" onClick={() => router.push("/")}>
+          <Image src="/logo.png" width={160} height={64} />
+        </div>
+
         <div className="px-3 cursor-pointer sm:hidden">
           <svg
             xmlns="http://www.w3.org/2000/svg"

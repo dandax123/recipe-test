@@ -8,9 +8,7 @@ interface GetMealsInput
 
 export default resolver.pipe(async ({ search, orderBy, skip = 0, take = 2 }: GetMealsInput) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const where = {
-    OR: [{ title: { contains: search } }, { Category: { some: { title: search } } }],
-  }
+
   const {
     items: meals,
     hasMore,
@@ -19,11 +17,42 @@ export default resolver.pipe(async ({ search, orderBy, skip = 0, take = 2 }: Get
   } = await paginate({
     skip,
     take,
-    count: () => db.meal.count({ where }),
+    count: () =>
+      db.meal.count({
+        where: {
+          OR: [
+            { title: { contains: search, mode: "insensitive" } },
+            {
+              Category: {
+                some: {
+                  title: {
+                    contains: search,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
+        },
+      }),
     query: (paginateArgs) =>
       db.meal.findMany({
         ...paginateArgs,
-        where,
+        where: {
+          OR: [
+            { title: { contains: search, mode: "insensitive" } },
+            {
+              Category: {
+                some: {
+                  title: {
+                    contains: search,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
+        },
         orderBy,
         include: {
           Category: true,

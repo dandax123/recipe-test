@@ -11,7 +11,16 @@ export const getFavorite = resolver.pipe(resolver.authorize(), async ({ id }, ct
       },
     },
   })
-  return isFavorite ? true : false
+  const isOwner = await db.meal.count({
+    where: {
+      id,
+      author: {
+        id: ctx.session.userId,
+      },
+    },
+  })
+  // console.log("isOwner", isOwner)
+  return { isFavorite: Boolean(isFavorite), isOwner: Boolean(isOwner) }
 })
 
 export default getFavorite

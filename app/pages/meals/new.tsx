@@ -25,9 +25,9 @@ const NewMealPage: BlitzPage = () => {
   const [createMealMutation] = useMutation(createMeal)
 
   return (
-    <div className="grid w-full h-full p-4">
-      <h1>Create a meal</h1>
-      <div className="relative shadow-md ">
+    <div className="w-full h-full p-0">
+      {/* <h1>Create a meal</h1> */}
+      <div className="bg whiteh-full w-full  ">
         <MealForm
           submitText="Add new Meal"
           schema={addMeal}
@@ -36,7 +36,7 @@ const NewMealPage: BlitzPage = () => {
           onSubmit={async (values) => {
             try {
               const meal = await createMealMutation(applyFunction(values))
-              console.log(meal)
+              // console.log(meal)
               router.push(`/meals/${meal.id}`)
             } catch (error) {
               console.error("addError:", error)
@@ -48,11 +48,11 @@ const NewMealPage: BlitzPage = () => {
         />
       </div>
 
-      <p>
+      {/* <p>
         <Link href={Routes.MealsPage()}>
           <a>Meals</a>
         </Link>
-      </p>
+      </p> */}
     </div>
   )
 }

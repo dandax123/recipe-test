@@ -60,13 +60,14 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
   const [measuresData] = useQuery(getIngredientsMeasures, {})
   const addIngredientRef = useRef()
   const addInstructionRef = useRef()
+  console.log("initialValues", initialValues)
 
   useEffect(() => {
-    if ("current" in addIngredientRef) {
+    if ("current" in addIngredientRef && !initialValues?.title) {
       addIngredientRef.current.click()
       addIngredientRef.current.click()
     }
-    if ("current" in addInstructionRef) {
+    if ("current" in addInstructionRef && !initialValues?.title) {
       addInstructionRef.current.click()
     }
   }, [])
@@ -94,14 +95,13 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
               return false
             })
             .reduce((acc, curr) => ({ ...acc, [`${curr.path}Error`]: [curr.message] }), {})
-
-          // console.log(error?.formErrors)
+          // console.log(Object.create(error?.formErrors))
 
           const y = {
             ...error?.formErrors?.fieldErrors,
             ...pureManualError,
           }
-          console.log(y)
+          // console.log(y)
           return y
         }
       }}
@@ -173,7 +173,12 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                   <div>
                     <h1>Recipe Instruction</h1>
 
-                    <FieldArray name="instruction">
+                    <FieldArray
+                      name="instruction"
+                      initialValue={
+                        initialValues?.Recipe?.instruction?.map((x) => ({ instruction: x })) || []
+                      }
+                    >
                       {({ fields }) =>
                         fields.map((name, index) => {
                           return (
@@ -227,7 +232,16 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                 <div className="grid grid-col-1">
                   <div className="grid md:grid-cols-2 gap-0">
                     <div className="col-span-2">
-                      <FieldArray name="ingredients">
+                      <FieldArray
+                        name="ingredients"
+                        initialValue={
+                          initialValues?.Recipe?.ingredients?.map((x) => ({
+                            qty: x.qty,
+                            name: x.ingredientName,
+                            measure: x.measures.name,
+                          })) || []
+                        }
+                      >
                         {({ fields }) =>
                           fields.map((name, index) => {
                             //   console.log(name)
@@ -254,6 +268,7 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                                     isMulti={false}
                                     data={measuresData.categories}
                                     onCreate={addIngredients}
+                                    // defaultValue =
                                     customValidation={(value) => {
                                       // console.log(value)
                                       return customValidation(
@@ -275,7 +290,6 @@ export function SpecialMealForm<S extends z.ZodType<any, any>>({
                                     data={measuresData.ingredientsName}
                                     onCreate={addIngredientNameMutation}
                                     customValidation={(name) => {
-                                      console.log(name)
                                       return customValidation(
                                         ingredientsValidation.pick({ name: true }),
                                         {

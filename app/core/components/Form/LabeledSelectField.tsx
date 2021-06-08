@@ -2,7 +2,6 @@ import { forwardRef, PropsWithoutRef, useState } from "react"
 import { useField } from "react-final-form"
 import Select from "react-select/creatable"
 import makeAnimated from "react-select/animated"
-import { invalidateQuery, useQuery } from "blitz"
 const animatedComponents = makeAnimated()
 
 export interface OptionsForSelect {
@@ -19,20 +18,21 @@ export interface SelectOptions extends PropsWithoutRef<JSX.IntrinsicElements["se
   canValidate?: boolean
   onCreate: (value: string) => any
   data: OptionsForSelect[]
+  defaultValue?: string[]
   customValidation?: (value: any) => any
   /** Field type. Doesn't include radio buttons and checkboxes */
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
 }
 
 export const LabeledSelectAreaField = forwardRef<HTMLTextAreaElement, SelectOptions>(
-  ({ name, label, isMulti, onCreate, data, outerProps, ...props }, ref) => {
+  ({ name, label, isMulti, onCreate, data, outerProps, defaultValue = [], ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
     } = useField(name, {
       ...(props?.canValidate && { validate: props.customValidation! }),
     })
-
+    // console.log(defaultValue)
     const [stateOptions, setStateOptions] = useState(data)
 
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
